@@ -48,10 +48,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if compgen -G "reports/*.pdf" > /dev/null; then
+            git pull --rebase origin main
             git add reports/*.pdf
             git diff --staged --quiet \
               && echo "変更なし。スキップします。" \
-               || (git commit -m "docs: PDF自動生成 [skip ci]" && git pull --rebase && git push)
+              || (git commit -m "docs: PDF自動生成 [skip ci]" && git push)
           else
             echo "PDFファイルが見つかりませんでした。変換をスキップします。"
           fi
