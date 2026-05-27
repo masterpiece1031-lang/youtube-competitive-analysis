@@ -3,11 +3,14 @@ name: Markdown Reports → PDF 自動変換
 on:
   push:
     paths:
-      - 'reports/**.md'   # reports/ 内の .md が push されたら起動
-  workflow_dispatch:       # 手動実行も可能
+      - 'reports/**.md'
+  workflow_dispatch:
 
 permissions:
-  contents: write          # PDF を commit・push するために必要
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   convert:
