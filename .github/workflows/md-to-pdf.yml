@@ -51,7 +51,7 @@ jobs:
             git add reports/*.pdf
             git diff --staged --quiet \
               && echo "変更なし。スキップします。" \
-              || (git commit -m "docs: PDF自動生成 [skip ci]" && git push)
+               || (git commit -m "docs: PDF自動生成 [skip ci]" && git pull --rebase && git push)
           else
             echo "PDFファイルが見つかりませんでした。変換をスキップします。"
           fi
