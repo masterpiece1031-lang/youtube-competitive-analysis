@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: リポジトリをチェックアウト
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 日本語フォントと Chromium をインストール
         run: |
@@ -43,8 +45,20 @@ jobs:
               --pdf-options '{"format":"A4","margin":{"top":"20mm","bottom":"20mm","left":"20mm","right":"20mm"}}'
           done
 
-      - name: PDF を commit・push
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "docs: PDF自動生成 [skip ci]"
-          file_pattern: "reports/*.pdf"
+       - name: PDF を commit・push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if compgen -G "reports/*.pdf" > /dev/null; then
+            git add reports/*.pdf
+            if ! git diff --staged --quiet; then
+              git commit -m "docs: PDF自動生成 [skip ci]"
+              git fetch origin main
+              git rebase origin/main
+              git push origin HEAD:main
+            else
+              echo "変更なし。スキップします。"
+            fi
+          else
+            echo "PDFファイルが見つかりませんでした。"
+          fi
